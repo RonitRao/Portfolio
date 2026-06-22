@@ -1,0 +1,81 @@
+:root {
+  --bg: #030206;               /* Deep matte workspace black */
+  --text-primary: #ffffff;     /* Solid white headings */
+  --text-secondary: #94a3b8;   /* Balanced slate text */
+  
+  /* Strict Custom Palette Vectors */
+  --c-blue: #2563eb;
+  --c-purple: #a855f7;
+  --c-green: #00ffa3;
+  --c-cyan: #00f3ff;
+  
+  --border: rgba(0, 243, 255, 0.15);
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+
+  font: 16px/150% var(--sans);
+  background-color: var(--bg);
+  color: var(--text-secondary);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background-color: var(--bg);
+  cursor: none; 
+}
+
+/* 🗺️ Centered Cinematic Console Wrapper */
+#root {
+  width: 100%;
+  max-width: 100%;        
+  margin: 0 auto;    
+  padding-left: 40px;    /* Lower this number (like 20px) to move closer to the edge, raise it to push it right */
+  padding-right: 40px;         /* Centers the entire dashboard console on wide monitors */
+  padding-inline: 40px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 🕹️ Custom Digital Target Pointer Core Nodes */
+.custom-cursor {
+  width: 6px;
+  height: 6px;
+  background: var(--c-cyan);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px var(--c-cyan);
+}
+
+.custom-cursor-ring {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(0, 243, 255, 0.4);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+/* Terminal Caret Blinking Cycle */
+@keyframes caretBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-caret {
+  display: inline-block;
+  width: 9px;
+  height: 16px;
+  background-color: var(--c-green);
+  margin-left: 5px;
+  vertical-align: middle;
+  animation: caretBlink 0.8s infinite;
+}
