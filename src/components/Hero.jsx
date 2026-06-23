@@ -16,20 +16,28 @@ export default function Hero() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [terminalLines, setTerminalLines] = useState([]);
 
-  // 📟 TIME-CALIBRATED SEQUENCE INJECTOR
+  // 📟 SYNCHRONIZED TIMED SEQUENCE INJECTOR
   useEffect(() => {
     let currentLineIndex = 0;
-    const typeInterval = setInterval(() => {
-      if (currentLineIndex < FULL_LOG_SEQUENCE.length) {
-        const nextLine = FULL_LOG_SEQUENCE[currentLineIndex];
-        setTerminalLines(prev => [...prev, nextLine]);
-        currentLineIndex++;
-      } else {
-        clearInterval(typeInterval);
-      }
-    }, 850);
+    let typeInterval;
 
-    return () => clearInterval(typeInterval);
+    // ⏱️ 1.8-Second delay buffer lets the main overlay drop completely before rendering text
+    const syncTimeout = setTimeout(() => {
+      typeInterval = setInterval(() => {
+        if (currentLineIndex < FULL_LOG_SEQUENCE.length) {
+          const nextLine = FULL_LOG_SEQUENCE[currentLineIndex];
+          setTerminalLines(prev => [...prev, nextLine]);
+          currentLineIndex++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, 850);
+    }, 1800);
+
+    return () => {
+      clearTimeout(syncTimeout);
+      if (typeInterval) clearInterval(typeInterval);
+    };
   }, []);
 
   // 🕹️ REAL-TIME 3D PERSPECTIVE SPATIAL PARALLAX TILT
@@ -61,6 +69,32 @@ export default function Hero() {
       width: '100%'
     }}>
 
+      {/* 🔮 CORE CYBER GLITCH & GLOW STYLE MATRIX */}
+      <style>{`
+        @keyframes cyberTextGlitch {
+          0% { text-shadow: 0 0 15px rgba(255,255,255,0.6), 2px -1px 0 rgba(0,243,255,0.3), -2px 1px 0 rgba(255,0,170,0.3); }
+          14% { text-shadow: 0 0 15px rgba(255,255,255,0.6), 2px -1px 0 rgba(0,243,255,0.3), -2px 1px 0 rgba(255,0,170,0.3); }
+          15% { text-shadow: 2px 2px 0 rgba(0,243,255,0.7), -3px -2px 0 rgba(255,0,170,0.7), 0 0 20px rgba(255,255,255,0.8); }
+          16% { text-shadow: -2px -1px 0 rgba(0,243,255,0.5), 2px 3px 0 rgba(255,0,170,0.5); }
+          17% { text-shadow: 0 0 15px rgba(255,255,255,0.6); }
+          55% { text-shadow: 0 0 15px rgba(255,255,255,0.6), 1px -2px 0 rgba(0,243,255,0.2), -1px 2px 0 rgba(255,0,170,0.2); }
+          56% { transform: skew(3deg); text-shadow: -3px 0 0 #00f3ff, 3px 0 0 #ff00aa; }
+          57% { transform: skew(-2deg); }
+          58% { transform: skew(0deg); text-shadow: 0 0 15px rgba(255,255,255,0.6); }
+          100% { text-shadow: 0 0 15px rgba(255,255,255,0.6), 2px -1px 0 rgba(0,243,255,0.3), -2px 1px 0 rgba(255,0,170,0.3); }
+        }
+        
+        .glitch-glow-headline {
+          font-size: '76px';
+          font-weight: '900';
+          line-height: '0.95';
+          letter-spacing: '-3px';
+          color: var(--text-primary);
+          margin-bottom: '28px';
+          animation: cyberTextGlitch 4.5s infinite linear;
+        }
+      `}</style>
+
       {/* LEFT PORT: BALANCED HUD TYPOGRAPHY */}
       <div style={{ textAlign: 'left', width: '100%' }}>
         <div style={{
@@ -81,8 +115,9 @@ export default function Hero() {
           SYSTEM ONLINE // 2026
         </div>
 
-        <h1 style={{ fontSize: '76px', fontWeight: '900', lineHeight: '0.95', letterSpacing: '-3px', color: 'var(--text-primary)', marginBottom: '28px' }}>
-          RONIT <span style={{ color: 'transparent', WebkitTextStroke: '1px rgba(255,255,255,0.8)' }}>RAO</span>
+        {/* 🌟 UPGRADED CORE HEADLINE: Features active signal breakdown and ambient white aura glow */}
+        <h1 className="glitch-glow-headline" style={{ fontSize: '76px', fontWeight: '900', lineHeight: '0.95', letterSpacing: '-3px', color: '#ffffff', marginBottom: '28px' }}>
+          RONIT <span style={{ color: 'transparent', WebkitTextStroke: '1px rgba(255,255,255,0.85)', filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))' }}>RAO</span>
         </h1>
 
         <p style={{ 
@@ -121,11 +156,9 @@ export default function Hero() {
         onMouseLeave={handleMouseLeave}
         style={{
           background: '#050409',
-          /* 🌟 CALIBRATED PURPLE-VIOLET GLOW PERIMETER LINES */
           border: '1px solid rgba(168, 85, 247, 0.4)',
           borderRadius: '10px',
           padding: '28px',
-          /* Enhanced ambient occlusion purple backing halo drop */
           boxShadow: '0 30px 70px rgba(0,0,0,0.95), 0 0 35px rgba(168, 85, 247, 0.2)',
           minHeight: '340px',
           fontFamily: 'var(--mono)',
@@ -138,13 +171,13 @@ export default function Hero() {
           justifySelf: 'end'        
         }}
       >
-        <div style={{ display: 'flex', justifyBetween: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px', marginBottom: '18px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px', marginBottom: '18px' }}>
           <div style={{ display: 'flex', gap: '6px' }}>
             <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#ef4444' }}></span>
             <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#eab308' }}></span>
             <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#00ffa3' }}></span>
           </div>
-          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)' }}> 
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)' }}>
             user@ronit-ai:~
           </div>
         </div>
