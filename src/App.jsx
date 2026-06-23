@@ -14,11 +14,9 @@ function App() {
   const [isHovered, setIsHovered] = useState(false);
   const canvasRef = useRef(null);
 
-  // 📟 TERMINAL BOOTUP CONTROL STATE ENGINE
+  // 📟 BOOT STATE ENGINE: Stays active across browser mount cycles
   const [bootState, setBootState] = useState('intro');
   const [bootProgress, setBootProgress] = useState(0);
-
-  // ⚡ ELECTRICITY SPARK PARTICLE ENGINE STATE
   const [sparks, setSparks] = useState([]);
 
   // 🌊 GLOBAL MATRIX DIGITAL CODE STREAM ENGINE
@@ -76,14 +74,13 @@ function App() {
       setBootProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setBootState('ready');
-          setTimeout(() => setBootState('complete'), 1500);
+          setBootState('ready'); // Triggers the fading phase
           return 100;
         }
-        const nextStep = prev + Math.floor(Math.random() * 12) + 4;
+        const nextStep = prev + Math.floor(Math.random() * 12) + 5;
         return nextStep > 100 ? 100 : nextStep;
       });
-    }, 120);
+    }, 100);
 
     return () => clearInterval(interval);
   }, [bootState]);
@@ -151,7 +148,6 @@ function App() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>
       
-      {/* INTERFACE STYLING AND ELECTRICAL BLOOM COMPONENT EFFECTS */}
       <style>{`
         @keyframes cyberPowerFlash {
           0% { opacity: 0.15; text-shadow: 0 0 2px rgba(255,255,255,0.1); }
@@ -260,125 +256,120 @@ function App() {
         }} 
       />
 
-      {/* 📟 INITIALIZATION SYSTEM OVERLAY INTERFACE */}
-      {bootState !== 'complete' && (
+      {/* 📟 INITIALIZATION OVERLAY - Retains pointerEvents matching active state configs */}
+      <div style={{
+        position: 'fixed',
+        top: 0, left: 0,
+        width: '100vw', height: '100vh',
+        background: '#030206',
+        zIndex: 99999,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        pointerEvents: bootState === 'ready' ? 'none' : 'auto',
+        opacity: bootState === 'ready' ? 0 : 1,
+        transition: 'opacity 1.2s cubic-bezier(0.7, 0, 0.3, 1)'
+      }}>
+        
+        <div className="ai-wave-orbit" style={{ width: '450px', height: '450px', animation: 'aiWaveRotate 25s infinite linear' }} />
+        <div className="ai-wave-orbit" style={{ width: '650px', height: '650px', border: '1px solid rgba(0, 243, 255, 0.1)', strokeDasharray: '4 12', animation: 'aiWaveRotate 40s infinite linear reverse' }} />
+        <div className="ai-wave-orbit" style={{ width: '550px', height: '550px', border: '1px solid rgba(255, 0, 170, 0.08)', animation: 'aiPulseExpand 6s infinite cubic-bezier(0.215, 0.610, 0.355, 1)' }} />
+
         <div style={{
-          position: 'fixed',
-          top: 0, left: 0,
-          width: '100vw', height: '100vh',
-          background: '#030206',
-          zIndex: 99999,
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
           alignItems: 'center',
-          overflow: 'hidden',
-          pointerEvents: bootState === 'ready' ? 'none' : 'auto',
-          opacity: bootState === 'ready' ? 0 : 1,
-          transition: 'opacity 1.2s cubic-bezier(0.7, 0, 0.3, 1)'
+          gap: '20px',
+          textAlign: 'center',
+          zIndex: 10,
+          marginBottom: '56px'
         }}>
-          
-          <div className="ai-wave-orbit" style={{ width: '450px', height: '450px', animation: 'aiWaveRotate 25s infinite linear' }} />
-          <div className="ai-wave-orbit" style={{ width: '650px', height: '650px', border: '1px solid rgba(0, 243, 255, 0.1)', strokeDasharray: '4 12', animation: 'aiWaveRotate 40s infinite linear reverse' }} />
-          <div className="ai-wave-orbit" style={{ width: '550px', height: '550px', border: '1px solid rgba(255, 0, 170, 0.08)', animation: 'aiPulseExpand 6s infinite cubic-bezier(0.215, 0.610, 0.355, 1)' }} />
-
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '20px',
-            textAlign: 'center',
-            zIndex: 10,
-            marginBottom: '56px'
-          }}>
-            <h1 className="boot-header-title">RONIT RAO</h1>
-            <div className="boot-subtitle">- AI & ML Engineer -</div>
-          </div>
-
-          <div style={{ zIndex: 10 }}>
-            {bootState === 'intro' ? (
-              <button
-                onClick={() => setBootState('booting')}
-                style={{
-                  background: 'rgba(0, 243, 255, 0.02)',
-                  border: '1px solid #00f3ff',
-                  color: '#00f3ff',
-                  fontFamily: 'var(--mono)',
-                  fontSize: '13px',
-                  fontWeight: '700',
-                  padding: '18px 38px',
-                  borderRadius: '6px',
-                  letterSpacing: '2px',
-                  boxShadow: '0 0 20px rgba(0, 243, 255, 0.15)',
-                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = 'rgba(0, 243, 255, 0.12)';
-                  e.target.style.boxShadow = '0 0 30px rgba(0, 243, 255, 0.4)';
-                  e.target.style.transform = 'scale(1.03)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'rgba(0, 243, 255, 0.02)';
-                  e.target.style.boxShadow = '0 0 20px rgba(0, 243, 255, 0.15)';
-                  e.target.style.transform = 'scale(1)';
-                }}
-              >
-                [ INITIALIZE_SYSTEM ]
-              </button>
-            ) : (
-              <div style={{ width: '300px', textAlign: 'center' }}>
-                <div style={{
-                  width: '100%',
-                  height: '4px',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: '10px',
-                  overflow: 'hidden',
-                  marginBottom: '16px'
-                }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${bootProgress}%`,
-                    background: 'linear-gradient(90deg, #2563eb, #00f3ff)',
-                    boxShadow: '0 0 12px #00f3ff',
-                    transition: 'width 0.15s ease-out'
-                  }} />
-                </div>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: '11px', color: '#94a3b8', letterSpacing: '1px' }}>
-                  DOWNLOADING_CORE_UPLINKS... <span style={{ color: '#00f3ff', fontWeight: 'bold' }}>{bootProgress}%</span>
-                </div>
-              </div>
-            )}
-          </div>
+          <h1 className="boot-header-title">RONIT RAO</h1>
+          <div className="boot-subtitle">- AI & ML Engineer -</div>
         </div>
-      )}
 
-      {/* 🌟 SOLID LAYER 2: Foreground Main Portfolio Channels */}
-      {/* The Navbar has been brought out into a fixed layout container so it stays permanently pinned when scrolling below */}
+        <div style={{ zIndex: 10 }}>
+          {bootState === 'intro' ? (
+            <button
+              onClick={() => setBootState('booting')}
+              style={{
+                background: 'rgba(0, 243, 255, 0.02)',
+                border: '1px solid #00f3ff',
+                color: '#00f3ff',
+                fontFamily: 'var(--mono)',
+                fontSize: '13px',
+                fontWeight: '700',
+                padding: '18px 38px',
+                borderRadius: '6px',
+                letterSpacing: '2px',
+                boxShadow: '0 0 20px rgba(0, 243, 255, 0.15)',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(0, 243, 255, 0.12)';
+                e.target.style.boxShadow = '0 0 30px rgba(0, 243, 255, 0.4)';
+                e.target.style.transform = 'scale(1.03)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(0, 243, 255, 0.02)';
+                e.target.style.boxShadow = '0 0 20px rgba(0, 243, 255, 0.15)';
+                e.target.style.transform = 'scale(1)';
+              }}
+            >
+              [ INITIALIZE_SYSTEM ]
+            </button>
+          ) : (
+            <div style={{ width: '300px', textAlign: 'center' }}>
+              <div style={{
+                width: '100%',
+                height: '4px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '10px',
+                overflow: 'hidden',
+                marginBottom: '16px'
+              }}>
+                <div style={{
+                  height: '100%',
+                  width: `${bootProgress}%`,
+                  background: 'linear-gradient(90deg, #2563eb, #00f3ff)',
+                  boxShadow: '0 0 12px #00f3ff',
+                  transition: 'width 0.15s ease-out'
+                }} />
+              </div>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '11px', color: '#94a3b8', letterSpacing: '1px' }}>
+                DOWNLOADING_CORE_UPLINKS... <span style={{ color: '#00f3ff', fontWeight: 'bold' }}>{bootProgress}%</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 🌟 MAIN PORTFOLIO LAYER */}
       <div style={{ 
         position: 'relative', 
         zIndex: 2, 
         width: '100%',
-        opacity: (bootState === 'ready' || bootState === 'complete') ? 1 : 0,
-        transform: (bootState === 'ready' || bootState === 'complete') ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 1s, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 1s'
+        opacity: bootState === 'ready' ? 1 : 0,
+        transform: bootState === 'ready' ? 'translateY(0)' : 'translateY(20px)',
+        transition: 'opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s'
       }}>
         
-        {/* 📌 PERMANENTLY FIXED CONTROL NAVIGATION HEADER */}
         <div style={{
           position: 'fixed',
-          top: 0,
-          left: 0,
+          top: 0, left: 0,
           width: '100%',
-          zIndex: 9999, // Rides smoothly above all inner component layers
+          zIndex: 9999, 
           pointerEvents: 'auto'
         }}>
           <Navbar />
         </div>
 
-        {/* Inner page components drop down by 120px padding to sit perfectly below the fixed header */}
         <div style={{ paddingTop: '120px', width: '100%' }}>
-          <div id="hero"><Hero /></div>
+          {/* We pass the current bootState down as a prop so the Hero knows exactly when to start typing */}
+          <div id="hero"><Hero bootState={bootState} /></div>
           <div id="arsenal"><Arsenal /></div> 
           <div id="projects"><Projects /></div>
           <div id="certifications"><Certifications /></div>
