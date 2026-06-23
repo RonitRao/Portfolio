@@ -14,7 +14,7 @@ function App() {
   const [isHovered, setIsHovered] = useState(false);
   const canvasRef = useRef(null);
 
-  // 📟 BOOT STATE ENGINE: Stays active across browser mount cycles
+  // 📟 BOOT STATE ENGINE
   const [bootState, setBootState] = useState('intro');
   const [bootProgress, setBootProgress] = useState(0);
   const [sparks, setSparks] = useState([]);
@@ -74,7 +74,7 @@ function App() {
       setBootProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setBootState('ready'); // Triggers the fading phase
+          setBootState('ready');
           return 100;
         }
         const nextStep = prev + Math.floor(Math.random() * 12) + 5;
@@ -256,7 +256,7 @@ function App() {
         }} 
       />
 
-      {/* 📟 INITIALIZATION OVERLAY - Retains pointerEvents matching active state configs */}
+      {/* 📟 INITIALIZATION SYSTEM OVERLAY INTERFACE */}
       <div style={{
         position: 'fixed',
         top: 0, left: 0,
@@ -347,7 +347,22 @@ function App() {
         </div>
       </div>
 
-      {/* 🌟 MAIN PORTFOLIO LAYER */}
+      {/* 📌 PERMANENTLY LOCKED NAVIGATION RIG */}
+      {/* 🌟 FIXED: Moved completely outside of the animated content wrapper to bypass CSS stacking context issues */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        zIndex: 9999, 
+        pointerEvents: 'auto',
+        opacity: bootState === 'ready' ? 1 : 0,
+        transition: 'opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s'
+      }}>
+        <Navbar />
+      </div>
+
+      {/* 🌟 MAIN CONTENT CHASSIS WRAPPER */}
       <div style={{ 
         position: 'relative', 
         zIndex: 2, 
@@ -356,19 +371,7 @@ function App() {
         transform: bootState === 'ready' ? 'translateY(0)' : 'translateY(20px)',
         transition: 'opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s'
       }}>
-        
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0,
-          width: '100%',
-          zIndex: 9999, 
-          pointerEvents: 'auto'
-        }}>
-          <Navbar />
-        </div>
-
         <div style={{ paddingTop: '120px', width: '100%' }}>
-          {/* We pass the current bootState down as a prop so the Hero knows exactly when to start typing */}
           <div id="hero"><Hero bootState={bootState} /></div>
           <div id="arsenal"><Arsenal /></div> 
           <div id="projects"><Projects /></div>
