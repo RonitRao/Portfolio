@@ -18,6 +18,9 @@ function App() {
   const [bootState, setBootState] = useState('intro');
   const [bootProgress, setBootProgress] = useState(0);
 
+  // ⚡ ELECTRICITY SPARK PARTICLE ENGINE STATE
+  const [sparks, setSparks] = useState([]);
+
   // 🌊 GLOBAL MATRIX DIGITAL CODE STREAM ENGINE
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -85,10 +88,31 @@ function App() {
     return () => clearInterval(interval);
   }, [bootState]);
 
-  // 🕹️ CUSTOM MOUSE POINTER TRACKING DYNAMICS
+  // 🕹️ HIGH-PERFORMANCE MOUSE MOTION & SPARK GENERATION TRACKER
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePos({ x: e.clientX, y: e.clientY });
+
+      // Generate 2-3 dynamic electrical sparks per mouse move event tick
+      const newSparks = Array.from({ length: 3 }).map(() => {
+        const isYellow = Math.random() > 0.4;
+        return {
+          id: Math.random() + e.clientX + e.clientY,
+          x: e.clientX,
+          y: e.clientY,
+          // Random erratic movement trajectories mimicking lightning discharge arcs
+          vx: (Math.random() - 0.5) * 7,
+          vy: (Math.random() - 0.5) * 7 - (Math.random() * 2), // Slight upward drift wind pull
+          size: Math.random() * 7 + 4, // Bigger visible sizes as requested
+          color: isYellow 
+            ? `rgba(${230 + Math.floor(Math.random() * 25)}, ${215 + Math.floor(Math.random() * 40)}, ${50 + Math.floor(Math.random() * 50)}, ${Math.random() * 0.4 + 0.6})`
+            : `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.5})`,
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 20
+        };
+      });
+
+      setSparks((prev) => [...prev, ...newSparks].slice(-45)); // Enforced boundary limit to guard performance
     };
 
     const handleMouseOver = (e) => {
@@ -107,10 +131,29 @@ function App() {
     };
   }, []);
 
+  // ⚡ SPARK PHYSICS FRAME LOOP: Animates particles dropping away and dissolving
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setSparks((prev) =>
+        prev
+          .map((spark) => ({
+            ...spark,
+            x: spark.x + spark.vx,
+            y: spark.y + spark.vy,
+            vy: spark.vy + 0.15, // Gravitational degradation drag element
+            size: spark.size * 0.88, // Abrupt shrinkage dissipation rate
+            rotation: spark.rotation + spark.rotationSpeed
+          }))
+          .filter((spark) => spark.size > 0.8) // Safely unmount vanished sparks
+      );
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [sparks]);
+
   return (
     <div style={{ position: 'relative', minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>
       
-      {/* 🔮 ADVANCED LOADOUT CYBER STYLES PANEL */}
+      {/* 🔮 INTERFACE STYLING AND ELECTRICAL BLOOM COMPONENT EFFECTS */}
       <style>{`
         @keyframes cyberPowerFlash {
           0% { opacity: 0.15; text-shadow: 0 0 2px rgba(255,255,255,0.1); }
@@ -125,8 +168,6 @@ function App() {
           85% { opacity: 0.3; }
           88% { opacity: 1; }
         }
-        
-        /* 🌟 ROTATING COGNITIVE WAVES ANIMATION KEYS */
         @keyframes aiWaveRotate {
           0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); opacity: 0.08; }
           50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.12); opacity: 0.18; }
@@ -137,14 +178,13 @@ function App() {
           50% { opacity: 0.4; }
           100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
         }
-
         .boot-header-title {
           font-family: 'var(--sans)', sans-serif;
           font-size: 80px;
           font-weight: 900;
           color: #ffffff;
           letter-spacing: -2px;
-          line-height: 1.1; /* Explicit block boundary to eliminate compression */
+          line-height: 1.1;
           margin: 0;
           animation: cyberPowerFlash 5s infinite linear;
         }
@@ -160,15 +200,18 @@ function App() {
           animation: cyberPowerFlash 5s infinite linear;
           animation-delay: 0.15s;
         }
-        
-        /* Ambient Waves Structural Vectors */
         .ai-wave-orbit {
           position: absolute;
           top: 50%; left: 50%;
           border-radius: 50%;
-          border: 1px dashed rgba(168, 85, 247, 0.3); /* Purple ambient rim */
+          border: 1px dashed rgba(168, 85, 247, 0.3);
           pointer-events: none;
           transform: translate(-50%, -50%);
+        }
+
+        /* Hide the native browser mouse completely across all interface nodes */
+        body, html, a, button, select, input {
+          cursor: none !important;
         }
       `}</style>
 
@@ -181,25 +224,43 @@ function App() {
         pointerEvents: 'none'
       }} />
 
-      {/* 🌟 POINTER CHASSIS - Escalated to zIndex 1000000 so you can see your cursor on the loader screen */}
+      {/* 🌟 THE ELECTRIC FIELD LAYER: Renders live snapping sparks with peak zIndex visibility */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 1000001 }}>
+        {sparks.map((spark) => (
+          <div
+            key={spark.id}
+            style={{
+              position: 'absolute',
+              left: `${spark.x}px`,
+              top: `${spark.y}px`,
+              width: `${spark.size}px`,
+              height: `${spark.size}px`,
+              background: spark.color,
+              // Jagged geometric diamond structures mimicking actual discharge points rather than soft circles
+              clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+              transform: `translate(-50%, -50%) rotate(${spark.rotation}deg)`,
+              filter: 'drop-shadow(0 0 6px rgba(255,245,150,0.8))',
+              opacity: spark.size > 2 ? 1 : spark.size
+            }}
+          />
+        ))}
+      </div>
+
+      {/* 🎯 CORE NEAT MOUSE POINTER DOT */}
       <div 
-        className="custom-cursor" 
         style={{ 
+          position: 'fixed',
           left: `${mousePos.x}px`, 
           top: `${mousePos.y}px`,
-          backgroundColor: isHovered ? '#a855f7' : '#00f3ff',
-          boxShadow: isHovered ? '0 0 20px #a855f7' : '0 0 15px #00f3ff',
-          zIndex: 1000000 
-        }} 
-      />
-      <div 
-        className="custom-cursor-ring" 
-        style={{ 
-          left: `${mousePos.x}px`, 
-          top: `${mousePos.y}px`,
-          transform: `translate(-50%, -50%) scale(${isHovered ? 1.4 : 1})`,
-          borderColor: isHovered ? '#00ffa3' : 'rgba(0, 243, 255, 0.4)',
-          zIndex: 999999 
+          transform: 'translate(-50%, -50%)',
+          width: isHovered ? '10px' : '6px', 
+          height: isHovered ? '10px' : '6px', 
+          backgroundColor: isHovered ? '#ffffff' : '#fffb00',
+          boxShadow: isHovered ? '0 0 15px #ffffff, 0 0 25px #00f3ff' : '0 0 10px #ffea00, 0 0 20px #ffffff',
+          borderRadius: '50%',
+          zIndex: 1000002,
+          pointerEvents: 'none',
+          transition: 'width 0.2s, height 0.2s, background-color 0.2s'
         }} 
       />
 
@@ -221,17 +282,15 @@ function App() {
           transition: 'opacity 1.2s cubic-bezier(0.7, 0, 0.3, 1)'
         }}>
           
-          {/* 🌟 FLOATING ROTATING AI WAVE RIGS - Fills empty background space */}
           <div className="ai-wave-orbit" style={{ width: '450px', height: '450px', animation: 'aiWaveRotate 25s infinite linear' }} />
           <div className="ai-wave-orbit" style={{ width: '650px', height: '650px', border: '1px solid rgba(0, 243, 255, 0.1)', strokeDasharray: '4 12', animation: 'aiWaveRotate 40s infinite linear reverse' }} />
           <div className="ai-wave-orbit" style={{ width: '550px', height: '550px', border: '1px solid rgba(255, 0, 170, 0.08)', animation: 'aiPulseExpand 6s infinite cubic-bezier(0.215, 0.610, 0.355, 1)' }} />
 
-          {/* 🌟 UN-CONGESTED VERBATIM COLUMN CONTAINER */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '20px', /* Enforces safe, un-collapsible structural layout space */
+            gap: '20px',
             textAlign: 'center',
             zIndex: 10,
             marginBottom: '56px'
@@ -240,7 +299,6 @@ function App() {
             <div className="boot-subtitle">- AI & ML Engineer -</div>
           </div>
 
-          {/* SYSTEM BUTTON ACTION SLOT */}
           <div style={{ zIndex: 10 }}>
             {bootState === 'intro' ? (
               <button
@@ -255,7 +313,6 @@ function App() {
                   padding: '18px 38px',
                   borderRadius: '6px',
                   letterSpacing: '2px',
-                  cursor: 'none',
                   boxShadow: '0 0 20px rgba(0, 243, 255, 0.15)',
                   transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
@@ -273,7 +330,6 @@ function App() {
                 [ INITIALIZE_SYSTEM ]
               </button>
             ) : (
-              /* TELEMETRY LOADING GRID MODULE */
               <div style={{ width: '300px', textAlign: 'center' }}>
                 <div style={{
                   width: '100%',
