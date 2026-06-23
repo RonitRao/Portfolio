@@ -93,17 +93,15 @@ function App() {
     const handleMouseMove = (e) => {
       setMousePos({ x: e.clientX, y: e.clientY });
 
-      // Generate 2-3 dynamic electrical sparks per mouse move event tick
       const newSparks = Array.from({ length: 3 }).map(() => {
         const isYellow = Math.random() > 0.4;
         return {
           id: Math.random() + e.clientX + e.clientY,
           x: e.clientX,
           y: e.clientY,
-          // Random erratic movement trajectories mimicking lightning discharge arcs
           vx: (Math.random() - 0.5) * 7,
-          vy: (Math.random() - 0.5) * 7 - (Math.random() * 2), // Slight upward drift wind pull
-          size: Math.random() * 7 + 4, // Bigger visible sizes as requested
+          vy: (Math.random() - 0.5) * 7 - (Math.random() * 2), 
+          size: Math.random() * 7 + 4, 
           color: isYellow 
             ? `rgba(${230 + Math.floor(Math.random() * 25)}, ${215 + Math.floor(Math.random() * 40)}, ${50 + Math.floor(Math.random() * 50)}, ${Math.random() * 0.4 + 0.6})`
             : `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.5})`,
@@ -112,7 +110,7 @@ function App() {
         };
       });
 
-      setSparks((prev) => [...prev, ...newSparks].slice(-45)); // Enforced boundary limit to guard performance
+      setSparks((prev) => [...prev, ...newSparks].slice(-45)); 
     };
 
     const handleMouseOver = (e) => {
@@ -131,7 +129,7 @@ function App() {
     };
   }, []);
 
-  // ⚡ SPARK PHYSICS FRAME LOOP: Animates particles dropping away and dissolving
+  // ⚡ SPARK PHYSICS FRAME LOOP
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
       setSparks((prev) =>
@@ -140,11 +138,11 @@ function App() {
             ...spark,
             x: spark.x + spark.vx,
             y: spark.y + spark.vy,
-            vy: spark.vy + 0.15, // Gravitational degradation drag element
-            size: spark.size * 0.88, // Abrupt shrinkage dissipation rate
+            vy: spark.vy + 0.15, 
+            size: spark.size * 0.88, 
             rotation: spark.rotation + spark.rotationSpeed
           }))
-          .filter((spark) => spark.size > 0.8) // Safely unmount vanished sparks
+          .filter((spark) => spark.size > 0.8) 
       );
     });
     return () => cancelAnimationFrame(frame);
@@ -153,7 +151,7 @@ function App() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>
       
-      {/* 🔮 INTERFACE STYLING AND ELECTRICAL BLOOM COMPONENT EFFECTS */}
+      {/* INTERFACE STYLING AND ELECTRICAL BLOOM COMPONENT EFFECTS */}
       <style>{`
         @keyframes cyberPowerFlash {
           0% { opacity: 0.15; text-shadow: 0 0 2px rgba(255,255,255,0.1); }
@@ -209,7 +207,6 @@ function App() {
           transform: translate(-50%, -50%);
         }
 
-        /* Hide the native browser mouse completely across all interface nodes */
         body, html, a, button, select, input {
           cursor: none !important;
         }
@@ -224,7 +221,7 @@ function App() {
         pointerEvents: 'none'
       }} />
 
-      {/* 🌟 THE ELECTRIC FIELD LAYER: Renders live snapping sparks with peak zIndex visibility */}
+      {/* THE ELECTRIC FIELD LAYER */}
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 1000001 }}>
         {sparks.map((spark) => (
           <div
@@ -236,7 +233,6 @@ function App() {
               width: `${spark.size}px`,
               height: `${spark.size}px`,
               background: spark.color,
-              // Jagged geometric diamond structures mimicking actual discharge points rather than soft circles
               clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
               transform: `translate(-50%, -50%) rotate(${spark.rotation}deg)`,
               filter: 'drop-shadow(0 0 6px rgba(255,245,150,0.8))',
@@ -358,23 +354,38 @@ function App() {
       )}
 
       {/* 🌟 SOLID LAYER 2: Foreground Main Portfolio Channels */}
+      {/* The Navbar has been brought out into a fixed layout container so it stays permanently pinned when scrolling below */}
       <div style={{ 
         position: 'relative', 
         zIndex: 2, 
         width: '100%',
-        paddingTop: '120px',
         opacity: (bootState === 'ready' || bootState === 'complete') ? 1 : 0,
         transform: (bootState === 'ready' || bootState === 'complete') ? 'translateY(0)' : 'translateY(20px)',
         transition: 'opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 1s, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 1s'
       }}>
-        <Navbar />
-        <div id="hero"><Hero /></div>
-        <div id="arsenal"><Arsenal /></div> 
-        <div id="projects"><Projects /></div>
-        <div id="certifications"><Certifications /></div>
-        <div id="about"><About /></div> 
-        <div id="contact"><Contact /></div>
-        <Footer />
+        
+        {/* 📌 PERMANENTLY FIXED CONTROL NAVIGATION HEADER */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          zIndex: 9999, // Rides smoothly above all inner component layers
+          pointerEvents: 'auto'
+        }}>
+          <Navbar />
+        </div>
+
+        {/* Inner page components drop down by 120px padding to sit perfectly below the fixed header */}
+        <div style={{ paddingTop: '120px', width: '100%' }}>
+          <div id="hero"><Hero /></div>
+          <div id="arsenal"><Arsenal /></div> 
+          <div id="projects"><Projects /></div>
+          <div id="certifications"><Certifications /></div>
+          <div id="about"><About /></div> 
+          <div id="contact"><Contact /></div>
+          <Footer />
+        </div>
       </div>
 
     </div>
